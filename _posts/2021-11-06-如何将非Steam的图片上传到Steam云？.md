@@ -78,7 +78,7 @@ Ctrl+A全选，然后按<font color=red>F2</font>
 可以上传中文文件名的图片
 </font>
 
-注：这个教程在2021年11月6日依然有效，如果出错了建议回去看看<font color=red>红字部分</font>
+注：这个教程在2022年7月8日依然有效，如果出错了建议回去看看<font color=red>红字部分</font>
 
 
 
