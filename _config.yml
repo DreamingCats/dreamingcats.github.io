@@ -1,41 +1,32 @@
 # Site settings
-title: 渣渣辉的博客
-SEOTitle: 渣渣辉的博客 | LSP Blog
-header-img: img/post-bg-desk.jpg
-email: lsp@hamonyos.onmicrosoft.com
-description: "来点涩图！"
-keyword: "Blog"
-url: "http://dreamingcats.github.io"          # your host, for absolute URL
-baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
-github_repo: "https://github.com/dreamingcats/dreamingcats.github.io.git" # you code repository
-
-# Sidebar settings
-sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Goals determine what you going to be!"
-sidebar-avatar: /img/about-DreamCat-gentle.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+title: Your Blog
+SEOTitle: 你的博客 | Your Blog
+header-img: img/home-bg.jpg
+email: huxpro@gmail.com
+description: ""
+keyword: ""
+url: "http://huangxuan.me"              # your host, for absolute URL
+baseurl: "/huxblog-boilerplate"         # for example, '/blog' if your blog hosted on 'host/blog'
 
 
 
 # SNS settings
-RSS: true
-#weibo_username:     qiubaiying
-#zhihu_username:     qiubaiying
-github_username:    dreamingcats
-#facebook_username:  baiying.qiu.7
-#jianshu_username:   e71990ada2fd
-#twitter_username:   qiubaiying
-bilibili_username:  286711955
-
+RSS: false
+weibo_username:     huxpro
+zhihu_username:     huxpro
+github_username:    huxpro
+#twitter_username:  huxpro
+facebook_username:  huxpro
 
 
 
 # Build settings
 # from 2016, 'pygments' is unsupported on GitHub Pages. Use 'rouge' for highlighting instead.
+highlighter: rouge
 permalink: pretty
-# 一页放几篇文章
 paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
-anchorjs: true                    # if you want to customize anchor. check out line:181 of `post.html`
+anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
 
 
 
@@ -45,76 +36,65 @@ gems: [jekyll-paginate]
 
 
 
-
 # Markdown settings
 # replace redcarpet to kramdown,
 # although redcarpet can auto highlight code, the lack of header-id make the catalog impossible, so I switch to kramdown
 # document: http://jekyllrb.com/docs/configuration/#kramdown
 markdown: kramdown
-highlighter: rouge
-gems: [jekyll-paginate]
-
 kramdown:
   input: GFM                            # use Github Flavored Markdown !important
 
 
 
-# 评论系统
-# Disqus（https://disqus.com/）
-# disqus_username: qiubaiying
+# Disqus settings
+#disqus_username: _your_disqus_short_name_
 
-# Gitalk（成功）
-gitalk:
-  enable: true    #是否开启Gitalk评论
-  clientID: 9666a6a0a2c7ea2c83ac                          #生成的clientID
-  clientSecret: 7871055ea1fe39d95524b68918853d05c76d90ba    #生成的clientSecret
-  repo: dreamingcats.github.io    #仓库名称
-  owner: dreamingcats    #github用户名
-  admin: dreamingcats
-  distractionFreeMode: true #是否启用类似FB的阴影遮罩
+# Duoshuo settings
+duoshuo_username: huxblog
+# Share component is depend on Comment so we can NOT use share only.
+duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
 
-# 统计
+
 
 # Analytics settings
-# Baidu Analytics 百度统计
-#已更换为DreamCat
-ba_track_id: e28a6849b844aa205912322400db275d
-
+# Baidu Analytics
+ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
 # Google Analytics
-#已更改
-ga_track_id: 'UA-211839196-2'            # Format: UA-xxxxxx-xx
-ga_domain: auto               # 默认的是 auto, 这里我是自定义了的域名，你如果没有自己的域名，需要改成auto
+ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
+ga_domain: huangxuan.me
 
 
+
+# Sidebar settings
+sidebar: true                           # whether or not using Sidebar.
+sidebar-about-description: "写写代码，做做设计，看看产品。世界那么大，多玩玩看看。"
+sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
 # Featured Tags
-featured-tags: true                     # 是否使用首页标签
-featured-condition-size: 1              # 相同标签数量大于这个数，才会出现在首页
-
-
-
-# Progressive Web Apps
-chrome-tab-theme-color: "#000000"
-service-worker: true
+featured-tags: true                     # whether or not using Feature-Tags
+featured-condition-size: 1              # A tag will be featured if the size of it is more than this condition value
 
 
 
 # Friends
 friends: [
     {
-        title: "我的分享盘",
-        href: "https://service-ibxnmgrp-1306118998.cd.apigw.tencentcs.com/release/OneManager"
+        title: "Hux Blog",
+        href: "http://huangxuan.me"
     },{
-        title: "原作者柏荧Github",
-        href: "https://github.com/qiubaiying/qiubaiying.github.io"
+        title: "Foo",
+        href: "#"
     },{
-        title: "MSDN",
-        href: "https://msdn.itellyou.cn/"
+        title: "Bar",
+        href: "#"
     },{
-         title: "Tale's Blog",
-        href: "http://fortune.gofintech.cn/"
+        title: "Example Friends",
+        href: "#"
+    },{
+        title: "It helps SEO",
+        href: "#"
     }
 ]
