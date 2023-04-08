@@ -2,8 +2,8 @@
 title: Canary Blog
 SEOTitle: Canary Blog
 header-img: img/home-bg.jpg
-email: huxpro@gmail.com
-description: "追求快乐和自由"
+email: canary@earthol.onmicrosoft.com
+description: "互联网有历史"
 keyword: "IT"
 url: "https://dreamingcats.github.io" # your host, for absolute URL
 baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
@@ -15,7 +15,7 @@ future: true
 RSS: false
 weibo_username: 
 zhihu_username: 
-github_username: 
+github_username: dreamingcats
 twitter_username: 
 #facebook_username:  huxpro
 #linkedin_username:  firstname-lastname-idxxxx
@@ -59,7 +59,7 @@ kramdown:
       start_line: 1
 
 # Disqus settings
-disqus_username: 
+disqus_username: canaryshare
 
 # Netease settings
 netease_comment: false
@@ -82,7 +82,7 @@ featured-tags: true # whether or not using Feature-Tags
 featured-condition-size: 1 # A tag will be featured if the size of it is more than this condition value
 
 # Progressive Web Apps
-chrome-tab-theme-color: "#000000"
+chrome-tab-theme-color: "#66ccff"
 service-worker: true
 
 # MathJax rendering for layout:page (e.g. post preview)
@@ -92,6 +92,6 @@ page-mathjax: false
 friends:
   [
     { title: "资源分享网盘", href: "https://drive.amerika.run/" },
-    { title: "模板作者：huxpro", href: "http://huangxuan.me/" }
-	
+    { title: "模板作者：huxpro", href: "http://huangxuan.me/" },
+	{ title: "原批笑话", href: "https://github.com/DreamingCats/GenshitJokes" },
   ]
