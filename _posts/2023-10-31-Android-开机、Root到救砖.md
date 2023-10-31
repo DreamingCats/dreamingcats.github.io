@@ -13,7 +13,7 @@ tags:
 
 # 前言
 
-<font color=red>如果你不是很明确的知道这个的功能是什么，以及出现问题如何解决，就不要这样做</font>
+<font color=red>如果你不是很明确的知道这步的操作是什么，以及出现问题如何解决，就不要这样做</font>
 
 # Android简介
 
@@ -24,7 +24,6 @@ tags:
 Android按照甜点来命名，首字母按递增顺序排列
 
 <a href="https://zh.wikipedia.org/wiki/Android版本列表" target="_blank">Android版本列表 - wikipedia.org</a>
-
 
 
 | 代号 | 甜点名                           |   版本号    |    发行日期    | API等级 |
@@ -60,6 +59,7 @@ Google在Android10开始取消了公开的甜点名，但仍内部使用，看�
 ### Dev
 ### Canary
 <font color=red>很不稳定，不建议小白使用</font>
+
 为什么软件工程中"金丝雀"会用做版本名？
 
 # 底层
@@ -84,7 +84,7 @@ setenforce 0 #重启后变回Enforcing
 
 ## Bootloader
 
-简称BL锁
+简称BL锁，想要获取root必须将其干掉
 
 <a href="https://www.coolapk.com/feed/32067805?shareKey=OTA0OTAyN2FkZTMxNjFiOTgzY2Y~&shareFrom=com.coolapk.market_11.4.6" target="_blank">浅谈底层固件安全性（强解BL，隐藏ID机等等背后的真相）</a>  
 转载自酷安@Jpnx49Db0
@@ -92,7 +92,7 @@ setenforce 0 #重启后变回Enforcing
 以小米为例，说下解锁方法：
 登录小米账号168小时（一周整）后，
 下载<a href="https://www.miui.com/unlock/download.html" target="_blank">miflash-unlock</a>申请解锁，
-注意解锁会清除全部数据
+<font color=red>注意解锁会清除全部数据，一定先备份！</font>
 
 ## 分区
 
@@ -105,7 +105,17 @@ setenforce 0 #重启后变回Enforcing
 
 ## 获取root
 
+## sudo!
 
+### 超频GPU
+### 修改
+
+## 过root检测
+~~我有root，用户app没有，优势在我~~
+### momo检测工具
+### Magisk
+采用随机包名安装，并且配置排除列表，或刷入Shamiko模块
+### 
 
 ## Recovery
 
@@ -114,18 +124,59 @@ setenforce 0 #重启后变回Enforcing
 ## Magisk
 <a href="https://github.com/topjohnwu/Magisk" target="_blank">topjohnwu/Magisk-Github</a>  
 名称来源于Magic Mask
+
+### 使用方法
 该程序可按照文件名选择功能，非常强
 *.zip是卡刷包（除uninstall.zip）
 *.apk是应用程序安装包
 uninstall.zip是卸载包
 
+### 作用原理
 
 ## Xposed
 
 ### Xposed
 ### EdXposed
-为了适配8+的适配问题而生。
+<a href="https://github.com/ElderDrivers/EdXposed" target="_blank">ElderDrivers/EdXposed-Github</a>
+为了适配Android 8+而生。
 作用域默认全局，很方便，但会造成一个后果：卡。
 ### LSPosed
 <a href="https://github.com/LSPosed/LSPosed" target="_blank">LSPosed/LSPosed-Github</a>
 为了解决EdXposed的缺点而生，需选择每个模块的作用域
+
+# 调试
+
+## ADB
+
+Android Debug Bridge
+
+<a href="https://dreamingcats.github.io/2021/11/05/%E5%B8%B8%E7%94%A8adb%E6%8C%87%E4%BB%A4/" target="_blank">常用adb指令</a>
+
+
+## 手机性能测试
+
+最好用的软件是<a href="https://perfdog.qq.com" target="_blank">Perfdog</a>，鹅厂出品，内测时免费用了一年多，现在收费很贵了
+
+
+<a href="https://perfdog.qq.com/case_detail/1286356" target="_blank">我测的一次原神</a>
+
+
+# 刷机与救砖
+~~砖了一次后，什么都会了~~
+
+## 刷机方式
+### 线刷
+因使用数据线连接其他设备刷机而得名。
+```
+fastboot flash 分区名称 镜像文件名.img
+```
+例：刷入boot分区 
+```
+fastboot flash boot boot.img
+```
+
+### 卡刷
+远古版本中，在SD卡中刷机而得名。刷机包的扩展名为zip
+
+### sideload
+使用线刷的方式在其他设备中刷卡刷包
