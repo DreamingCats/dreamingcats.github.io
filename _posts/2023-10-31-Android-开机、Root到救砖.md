@@ -17,7 +17,7 @@ tags:
 
 # Android简介
 
-<a href="https://developer.android.com/?hl=zh-cn" target="_blank">Android Developers</a>
+<a href="https://developer.android.google.cn/?hl=zh-cn" target="_blank">Android Developers</a>
 
 ## Version
 
@@ -66,6 +66,8 @@ Google在Android10开始取消了公开的甜点名，但仍内部使用，看�
 
 ## SELinux
 
+<a href="https://source.android.google.cn/docs/security/features/selinux?hl=zh-cn" target="_blank">Android 中的安全增强型 Linux</a>
+
 SELinux(Security-Enhanced Linux)分为三种状态：
 ### 1.Enforcing
 强制模式（严格模式）
@@ -100,55 +102,86 @@ setenforce 0 #重启后变回Enforcing
 ### 1.A-Only
 ### 2.A/B
 ### 3.V-A/B
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/current_slot.jpg)
 
 # Root
 
 ## 获取root
+曾经：各种一键root的app、SuperSU、Xposed
+现在：MagiskSU、KernelSU
 
-## sudo!
-
-### 超频GPU
-### 修改
-
-## 过root检测
-~~我有root，用户app没有，优势在我~~
-### momo检测工具
 ### Magisk
-采用随机包名安装，并且配置排除列表，或刷入Shamiko模块
-### 
-
-## Recovery
-
-简称REC
-
-## Magisk
 <a href="https://github.com/topjohnwu/Magisk" target="_blank">topjohnwu/Magisk-Github</a>  
 名称来源于Magic Mask
 
-### 使用方法
+#### 使用方法
 该程序可按照文件名选择功能，非常强
 *.zip是卡刷包（除uninstall.zip）
 *.apk是应用程序安装包
 uninstall.zip是卸载包
 
-### 作用原理
-
-## Xposed
+#### 作用原理
 
 ### Xposed
-### EdXposed
+
+#### Xposed
+<a href="https://github.com/rovo89/Xposed" target="_blank">rovo89/Xposed-Github</a>
+直接修改系统(System方式)，不安全
+
+#### EdXposed
 <a href="https://github.com/ElderDrivers/EdXposed" target="_blank">ElderDrivers/EdXposed-Github</a>
 为了适配Android 8+而生。
 作用域默认全局，很方便，但会造成一个后果：卡。
-### LSPosed
+
+#### LSPosed
 <a href="https://github.com/LSPosed/LSPosed" target="_blank">LSPosed/LSPosed-Github</a>
 为了解决EdXposed的缺点而生，需选择每个模块的作用域
+
+## sudo!
+
+### 多系统
+
+### 超频GPU
+
+### 移除温控，提升充电功率
+
+### 修改内核
+更高性能或更省电
+
+### 文件权限管理
+
+### 修改开机动画
+
+### 物理按键修改
+
+### 扫描任意app内存并修改
+修改微信性别和地址为空白
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/weixin_gender.jpg)
+
+## 过root检测
+~~我有root，用户app没有，优势在我~~
+
+有些app检测出root后会导致功能受限、弹窗强制退出甚至直接闪退的情况，因此需要隐藏root
+
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/bcm_root_check.jpg)
+
+Magisk采用随机包名安装，并且配置排除列表，或刷入Shamiko模块，
+建议弄到这步就够了，大多数应用已经可以正常使用了
+
+想要最大程度隐藏的话，看这个：
+<a href="https://www.coolapk.com/feed/48282566?shareKey=NjcxZDExYWI5NDhkNjU0MTE0MWU~&shareFrom=com.coolapk.market_13.3.6" target="_blank">Momo提示解决方法大全</a> 
+
+
 
 # 调试
 
 ## ADB
 
 Android Debug Bridge
+
+<a href="https://developer.android.google.cn/studio/releases/platform-tools?hl=zh-cn" target="_blank">platform-tools下载</a>
+
+配PATH：<a href="https://zhuanlan.zhihu.com/p/433391556" target="_blank">Win11怎么配置ADB环境变量 Win11配置ADB环境变量教程</a>
 
 <a href="https://dreamingcats.github.io/2021/11/05/%E5%B8%B8%E7%94%A8adb%E6%8C%87%E4%BB%A4/" target="_blank">常用adb指令</a>
 
@@ -157,7 +190,6 @@ Android Debug Bridge
 
 最好用的软件是<a href="https://perfdog.qq.com" target="_blank">Perfdog</a>，鹅厂出品，内测时免费用了一年多，现在收费很贵了
 
-
 <a href="https://perfdog.qq.com/case_detail/1286356" target="_blank">我测的一次原神</a>
 
 
@@ -165,8 +197,10 @@ Android Debug Bridge
 ~~砖了一次后，什么都会了~~
 
 ## 刷机方式
+
 ### 线刷
 因使用数据线连接其他设备刷机而得名。
+需要进入Fastboot模式(引导模式)刷机
 ```
 fastboot flash 分区名称 镜像文件名.img
 ```
@@ -176,7 +210,21 @@ fastboot flash boot boot.img
 ```
 
 ### 卡刷
-远古版本中，在SD卡中刷机而得名。刷机包的扩展名为zip
+远古版本中，在SD卡中刷机而得名，现已在内部存储中刷机。刷机包的扩展名为zip
+需要进入Recovery模式(REC,恢复模式)刷机
 
 ### sideload
 使用线刷的方式在其他设备中刷卡刷包
+
+## ROM选择
+
+### 官方
+
+### 官改
+
+### 原生
+AOSP
+### 类原生
+
+### 移植
+
