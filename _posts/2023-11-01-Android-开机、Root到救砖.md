@@ -4,7 +4,7 @@ title:    Android-开机、Root到救砖
 subtitle:   尽量从零开始吧
 date:       2023-11-01
 author:    DreamCat
-header-img: img/Android/Android_logo_2023.png
+header-img: img/post-bg-debug.png
 catalog: true
 tags:
 - root
@@ -16,6 +16,8 @@ tags:
 <font color=red>如果你不是很明确的知道这步的操作是什么，以及出现问题如何解决，就不要这样做</font>
 
 # Android简介
+
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/Android_logo_2023.png)
 
 <a href="https://developer.android.google.cn/?hl=zh-cn" target="_blank">Android Developers</a>
 
@@ -81,18 +83,21 @@ Google在Android10开始取消了公开的甜点名，但仍内部使用，看�
 <a href="https://source.android.google.cn/docs/security/features/selinux?hl=zh-cn" target="_blank">Android 中的安全增强型 Linux</a>
 
 SELinux(Security-Enhanced Linux)分为三种状态：
+
 ### Enforcing
 
 强制模式（严格模式），默认状态
 ```
 setenforce 1
 ```
+
 ### Permissive
 
 宽容模式，一般仅调试使用
 ```
 setenforce 0 #重启后变回Enforcing
 ```
+
 ### Disabled
 
 禁用
@@ -102,6 +107,7 @@ setenforce 0 #重启后变回Enforcing
 ## Bootloader
 
 简称BL锁，想要获取root必须将其干掉
+
 MIUI可在开机第一屏的屏幕正上方中间位置查看BL锁状态
 
 <a href="https://www.coolapk.com/feed/32067805?shareKey=OTA0OTAyN2FkZTMxNjFiOTgzY2Y~&shareFrom=com.coolapk.market_11.4.6" target="_blank">浅谈底层固件安全性（强解BL，隐藏ID机等等背后的真相）</a>  
@@ -129,7 +135,9 @@ MIUI可在开机第一屏的屏幕正上方中间位置查看BL锁状态
 # Root
 
 ## 获取root
+
 曾经：各种一键root的app、SuperSU、Xposed
+
 现在：MagiskSU、KernelSU
 
 ### Magisk
@@ -155,15 +163,18 @@ uninstall.zip是卸载包
 
 #### Xposed
 <a href="https://github.com/rovo89/Xposed" target="_blank">rovo89/Xposed-Github</a>
+
 直接修改系统(System方式)，不安全
 
 #### EdXposed
 <a href="https://github.com/ElderDrivers/EdXposed" target="_blank">ElderDrivers/EdXposed-Github</a>
-为了适配Android 8+而生。
+
+适配Android 8+、System方式改为Systemless。
 作用域默认全局，很方便，但会造成一个后果：卡。
 
 #### LSPosed
 <a href="https://github.com/LSPosed/LSPosed" target="_blank">LSPosed/LSPosed-Github</a>
+
 为了解决EdXposed的缺点而生，需选择每个模块的作用域
 
 ## sudo!
@@ -172,11 +183,15 @@ uninstall.zip是卸载包
 
 ### 强制降级系统或app
 
-### 超频GPU
+### 超频
+
+#### GPU
+#### 屏幕刷新率
 
 ### 移除温控，提升充电功率
 
 ### 修改内核
+
 更高性能或更省电
 
 ### 文件权限管理
@@ -186,6 +201,7 @@ uninstall.zip是卸载包
 ### 物理按键修改
 
 ### 扫描任意app内存并修改
+
 修改微信性别和地址为空白
 ![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/weixin_gender.jpg)
 
@@ -244,8 +260,29 @@ fastboot flash boot boot.img
 远古版本中，在SD卡中刷机而得名，现已在内部存储中刷机。刷机包的扩展名为zip
 需要进入Recovery模式(REC,恢复模式)刷机
 
-一个卡刷包发布的例子：
 
+### sideload
+使用线刷的方式在其他设备中刷卡刷包
+
+```
+adb sideload 卡刷包.zip
+```
+
+
+
+## ROM选择
+
+### 官方
+
+### 官改
+
+### 原生
+
+AOSP
+
+### 类原生
+
+一个例子：
 ```
 #EvolutionX #Alioth #U #unofficial #Aliothin #Rom #A14,
 EvolutionX-EOL Chaitanya Edition v8.0| Unofficial 
@@ -268,41 +305,31 @@ Follow @PocoF3GlobalUpdates
 Join @PocoF3GlobalOfficial
 ```
 
-
-
-### sideload
-使用线刷的方式在其他设备中刷卡刷包
-
-```
-adb sideload 卡刷包.zip
-```
-
-
-
-## ROM选择
-
-### 官方
-
-### 官改
-
-### 原生
-AOSP
-### 类原生
-
 ### 移植
+
+移植其他厂商的ROM，或相同厂商最新机型的ROM来用
+
+一个例子：
+<a href="https://www.coolapk.com/feed/50601031?shareKey=OWM0MTM0MWQzNTdiNjU0MWI5M2I~&shareFrom=com.coolapk.market_13.3.6" target="_blank">HyperOS移植包测试发布免费下载</a>
 
 ## 救砖
 
 "砖"指的是手机无法正常使用，就像砖头一样，英文为"brick",作动词用
 
 ### Magisk模块问题
+
 disable有问题的模块，
 如果不确定哪个有问题，或者是模块冲突，禁用全部模块
+
 ### Magisk本身问题
+
 刷卸载包uninstall.zip
+
 ### ROM问题
+
 确定ROM本身是否有问题，
 双清重刷
+
 ### 某分区问题
 把修改前备份的分区刷回来
 
@@ -310,3 +337,7 @@ disable有问题的模块，
 9008(高通)、SPflash(联发科)还可以再尝试下(一般只有售后有这两个的权限)
 
 未解锁bl的情况下变砖建议直接售后
+
+### systemui问题
+
+adb卸载作用域为systemui的模块
