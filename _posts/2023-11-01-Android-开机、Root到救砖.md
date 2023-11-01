@@ -2,9 +2,9 @@
 layout:     post
 title:    Android-开机、Root到救砖
 subtitle:   尽量从零开始吧
-date:       2023-10-31
+date:       2023-11-01
 author:    DreamCat
-header-img: img/post-bg-debug.png
+header-img: img/Android/Android_logo_2023.png
 catalog: true
 tags:
 - root
@@ -18,6 +18,12 @@ tags:
 # Android简介
 
 <a href="https://developer.android.google.cn/?hl=zh-cn" target="_blank">Android Developers</a>
+
+## Source Code
+
+Android基于<a href="https://github.com/torvalds/linux" target="_blank">torvalds/linux</a>
+
+<a href="https://source.android.google.cn/?hl=zh-cn" target="_blank">Android 开源项目</a>
 
 ## Version
 
@@ -64,22 +70,31 @@ Google在Android10开始取消了公开的甜点名，但仍内部使用，看�
 
 # 底层
 
+## 架构
+
+<a href="https://zh.wikipedia.org/wiki/Android#" target="_blank">Android-Wikipedia</a>
+
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/The-Android-software-stack.png)
+
 ## SELinux
 
 <a href="https://source.android.google.cn/docs/security/features/selinux?hl=zh-cn" target="_blank">Android 中的安全增强型 Linux</a>
 
 SELinux(Security-Enhanced Linux)分为三种状态：
-### 1.Enforcing
-强制模式（严格模式）
+### Enforcing
+
+强制模式（严格模式），默认状态
 ```
 setenforce 1
 ```
-### 2.Permissive
+### Permissive
+
 宽容模式，一般仅调试使用
 ```
 setenforce 0 #重启后变回Enforcing
 ```
-### 3.Disabled
+### Disabled
+
 禁用
 
 <font color=red>极其不推荐把SELinux置为后两种状态！极为危险！</font>
@@ -87,21 +102,28 @@ setenforce 0 #重启后变回Enforcing
 ## Bootloader
 
 简称BL锁，想要获取root必须将其干掉
+MIUI可在开机第一屏的屏幕正上方中间位置查看BL锁状态
 
 <a href="https://www.coolapk.com/feed/32067805?shareKey=OTA0OTAyN2FkZTMxNjFiOTgzY2Y~&shareFrom=com.coolapk.market_11.4.6" target="_blank">浅谈底层固件安全性（强解BL，隐藏ID机等等背后的真相）</a>  
 转载自酷安@Jpnx49Db0
 
 以小米为例，说下解锁方法：
-登录小米账号168小时（一周整）后，
-下载<a href="https://www.miui.com/unlock/download.html" target="_blank">miflash-unlock</a>申请解锁，
+登录小米账号168小时（一周整）后，下载<a href="https://www.miui.com/unlock/download.html" target="_blank">miflash-unlock</a>申请解锁，
 <font color=red>注意解锁会清除全部数据，一定先备份！</font>
 
 ## 分区
 
 ## AB分区
+
 ### 1.A-Only
+<a href="https://source.android.google.cn/docs/core/ota/nonab?hl=zh-cn" target="_blank">非 A/B 系统更新</a>
+
 ### 2.A/B
+<a href="https://source.android.google.cn/docs/core/ota/ab?hl=zh-cn" target="_blank">A/B（无缝）系统更新</a>
+
 ### 3.V-A/B
+<a href="https://source.android.google.cn/docs/core/ota/virtual_ab?hl=zh-cn" target="_blank">虚拟 A/B 概览</a>
+
 ![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/current_slot.jpg)
 
 # Root
@@ -121,6 +143,13 @@ setenforce 0 #重启后变回Enforcing
 uninstall.zip是卸载包
 
 #### 作用原理
+<a href="https://blog.csdn.net/qq_39441603/article/details/124996277" target="_blank">【Android安全】Android root原理及方案 | Magisk原理</a>
+
+<a href="https://sspai.com/post/53043#!" target="_blank">每个 Android 玩家都不可错过的神器（一）：Magisk 初识与安装-少数派</a>
+
+通过Systemless方式实现
+
+
 
 ### Xposed
 
@@ -140,6 +169,8 @@ uninstall.zip是卸载包
 ## sudo!
 
 ### 多系统
+
+### 强制降级系统或app
 
 ### 超频GPU
 
@@ -213,8 +244,40 @@ fastboot flash boot boot.img
 远古版本中，在SD卡中刷机而得名，现已在内部存储中刷机。刷机包的扩展名为zip
 需要进入Recovery模式(REC,恢复模式)刷机
 
+一个卡刷包发布的例子：
+
+```
+#EvolutionX #Alioth #U #unofficial #Aliothin #Rom #A14,
+EvolutionX-EOL Chaitanya Edition v8.0| Unofficial 
+Last build of  "@Chaitanyakm"
+Updated: 30/10/23
+
+▪️ Download - Index (https://dev.chaitanya.workers.dev/0:/evolution_alioth-ota-up1a.231005.007.a1-10282159-community-unsigned.zip?a=view) | Drive (https://drive.google.com/uc?id=1bwEd87SyfqH7Z8-YpnWyoWMYZU27i-UN&export=download) 
+▪️Support Group  (https://t.me/chaitanyabuilds)
+▪️Screenshot (https://t.me/chaitanyabuilds/21652?single) 
+
+ Notes:
+    • Initial A14 build and EOL build
+    • Leica included 
+    • Need to be on latest MIUI 14
+         Regional FW.
+    • Use a14 supported recovery 
+
+By @Chaitanyakm
+Follow @PocoF3GlobalUpdates
+Join @PocoF3GlobalOfficial
+```
+
+
+
 ### sideload
 使用线刷的方式在其他设备中刷卡刷包
+
+```
+adb sideload 卡刷包.zip
+```
+
+
 
 ## ROM选择
 
@@ -228,3 +291,22 @@ AOSP
 
 ### 移植
 
+## 救砖
+
+"砖"指的是手机无法正常使用，就像砖头一样，英文为"brick",作动词用
+
+### Magisk模块问题
+disable有问题的模块，
+如果不确定哪个有问题，或者是模块冲突，禁用全部模块
+### Magisk本身问题
+刷卸载包uninstall.zip
+### ROM问题
+确定ROM本身是否有问题，
+双清重刷
+### 某分区问题
+把修改前备份的分区刷回来
+
+解锁bl后，只要Fastboot(位于hboot分区)还在问题就不大，如果连fastboot都进不去，
+9008(高通)、SPflash(联发科)还可以再尝试下(一般只有售后有这两个的权限)
+
+未解锁bl的情况下变砖建议直接售后
