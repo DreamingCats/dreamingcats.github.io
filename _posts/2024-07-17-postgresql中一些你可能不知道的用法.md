@@ -161,7 +161,7 @@ VALUES
 ('GBP'),  -- 英镑
 ('AUD'),  -- 澳大利亚元
 ('CAD'),  -- 加拿大元
-('HKD'),  -- 港币
+('HKD')   -- 港币
 ;
 
 --币种表人民币排最前,美元第二,其余按照字母排序
@@ -200,7 +200,6 @@ WHERE (
 collname ilike '%zh-hans%'
 or collname ilike '%cn%'
 );
-
 ```
 
 ## 去重后排序
@@ -360,6 +359,43 @@ false是varchar(5)
 
 只有当两个表达式都为 FALSE 时，结果才是 FALSE。如果任一表达式为 TRUE，结果为 TRUE。如果有 NULL 存在，结果则取决于另一方的值。
 
+### NOT
+
+| expr1 | NOT expr1 |
+| ----- | --------- |
+| TRUE  | FALSE     |
+| FALSE | TRUE      |
+| NULL  | NULL      |
+
+```sql
+--我需要保留以下结果
+SELECT * 
+FROM test_table 
+WHERE a=1 AND b=2 AND c=3;
+
+--不满足这些条件的全部删除,只需前面加个NOT并括起来就行了
+DELETE FROM test_table 
+WHERE NOT (a=1 AND b=2 AND c=3);
+
+--等价于
+DELETE FROM test_table 
+WHERE (a!=1 OR b !=2 OR c!=3);
+```
+
+### 优先级
+
+```sql
+SELECT true AND true OR false AND false;  --该语句按什么顺序执行?返回的是什么?
+SELECT ((true AND true) OR false) AND false;  --按顺序从左向右?
+SELECT (true AND true) OR (false AND false);  --先AND再OR?
+```
+
+可以看到AND的优先级更高(先运算)。  
+因此写WHERE条件时，强烈建议<font color=red>有OR就用括号括起来</font>，防止范围扩大。  
+全是AND或全是OR则无所谓(满足交换律)  
+
+优先级:`NOT>AND>OR`
+
 ## null
 
 表示unknown,
@@ -373,10 +409,12 @@ WHERE条件整体返回的是一个布尔值，
 false或null时不会返回
 
 不用管网上说的`WHERE 1=1`增加耗时，放心写，**相信优化器**，不信你可以在后面加100个` and 1=1`试试
+
 ```sql
 SELECT 'SELECT ''测试耗时'' WHERE 1 '||string_agg('AND 1=1', ' ') AS result
 FROM generate_series(1, 100);
 ```
+
 如果你连=都懒得写就直接写`WHERE 1`
 (GaussDB(DWS),原生Postgres并不支持)
 
@@ -432,6 +470,7 @@ distribute by roundrobin;  --hash(hash_column)
 ```sql
 SELECT column1 FROM table1 ORDER BY random() LIMIT 1;
 ```
+
 ## 生成随机序列
 
 ```sql
@@ -440,6 +479,7 @@ UPDATE table1 SET cust_id='0'||LPAD((random()*1e9)::int::varchar,9,'0');  --用�
 ```
 
 ## 随机生成YYYYMMDD日期
+
 ```sql
 DROP TABLE IF EXISTS test_random_date;
 CREATE TABLE test_random_date(

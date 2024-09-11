@@ -92,6 +92,6 @@ page-mathjax: false
 friends:
   [
     { title: "资源分享网盘", href: "https://drive.amerika.run/" },
-    { title: "模板作者：huxpro", href: "http://huangxuan.me/" },
-	  { title: "原批笑话", href: "https://github.com/DreamingCats/GenshitJokes" },
+    { title: "模板作者:huxpro", href: "http://huangxuan.me/" },
+	  { title: "米哈游笑话", href: "https://github.com/DreamingCats/miHoYoJokes" },
   ]
