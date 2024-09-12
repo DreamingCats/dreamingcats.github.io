@@ -302,6 +302,23 @@ SELECT ' yE '::boolean AS J;
 false同理 
 </details>
 
+```sql
+SELECT (0=1 AND (1/0)=1) AS K;
+```
+<details>
+<summary>K答案</summary>
+K 返回false,因为第一个`0=1`结果为false导致WHERE短路,不会执行后面的`(1/0)=1`,如果写成`SELECT ((1/0)=1 AND 0=1) AS K2;`就报错了.
+
+同理
+```sql
+SELECT (1=1 OR (1/0)=1) AS K3;
+```
+结果为true.
+
+因此写WHERE条件时,建议把重要的条件放前面,能减少判断次数.
+
+[SQL常见100面试题解析-第12条](https://mp.weixin.qq.com/s/dKe8BEJU8O1XnTO61wrydw)
+</details>
 
 ## 存储
 
@@ -576,7 +593,7 @@ FROM T1
 
 ## sudo
 pg_tables其实是视图,使用root权限(postgres)可以DROP.  
-如果***不小心**删了可以按照原义建回来
+如果**不小心**删了可以按照原义建回来
 
 ```sql
 DROP VIEW pg_tables;
