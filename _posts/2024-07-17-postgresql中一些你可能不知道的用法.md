@@ -16,6 +16,7 @@ tags:
 # 名称
 
 表名、字段名支持unicode。可以，但不建议。
+
 ```sql
 DROP TABLE IF EXISTS 用中文表名怎么你了;
 CREATE TABLE 用中文表名怎么你了
@@ -44,6 +45,7 @@ SELECT 用中文字段名怎么你了,🥰,【，；：“”】 FROM 用中文�
  */
 #define NAMEDATALEN 64
 ```
+
 ```sql
 SELECT length('aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggg'); --看下长度
 DROP TABLE IF EXISTS aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffgggggggggg;  --每个字母有10个
@@ -103,112 +105,55 @@ SELECT 1||2;  --Postgres报错,GaussDB(DWS)会转成'12'
 SELECT current_timestamp -current_date;
 ```
 
-# SELECT
 
-## DISTINCT
+# JOIN
 
-```sql
---取客户最新日期的余额(每个客户只取一条)
-SELECT DISTINCT ON (cust_id) 
-    cust_id, 
-    dt, 
-    bal
-FROM 
-    table1
-ORDER BY 
-    cust, dt DESC;
-
---等价于
-SELECT cust_id, dt, bal
-FROM (
-    SELECT 
-        cust_id, 
-        dt, 
-        bal, 
-        ROW_NUMBER() OVER (
-          PARTITION BY cust_id 
-          ORDER BY dt DESC) AS rn
-    FROM 
-        table1
-) AS t
-WHERE rn = 1;
-```
-
-
-# ORDER BY
-
-## 规则
-
-默认的排序方式为按照ASCII增序排列。
-''(空串)小于任何一个字符串,null大于任何一个字符串
-
-因此，在对数据进行降序排列时，可以加上`NULLS LAST`,把null放在最后
-
-## 指定内容排序
+默认的`JOIN`为`INNER JOIN`
 
 ```sql
-DROP TABLE IF EXISTS ccy_table;
-CREATE TABLE ccy_table
-(
-  ccy varchar(3)
-);
-INSERT INTO ccy_table (ccy)
-VALUES 
-('CNY'),  -- 人民币
-('USD'),  -- 美元
-('EUR'),  -- 欧元
-('JPY'),  -- 日元
-('GBP'),  -- 英镑
-('AUD'),  -- 澳大利亚元
-('CAD'),  -- 加拿大元
-('HKD')   -- 港币
-;
-
---币种表人民币排最前,美元第二,其余按照字母排序
-SELECT *
-FROM ccy_table
-ORDER BY
-  CASE 
-    WHEN ccy = 'CNY' THEN 1
-    WHEN ccy = 'USD' THEN 2
-    ELSE 3
-  END,
-  ccy ASC
-;
-```
-
-```sql
-DROP TABLE IF EXISTS people_name_table;
-CREATE TABLE people_name_table (
-    name varchar(50)
+-- 创建 employees 表
+DROP TABLE IF EXISTS employees;
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    department_id INT
 );
 
-INSERT INTO people_name_table (name) VALUES 
-('张三'), 
-('李四'), 
-('王五'),
-('艾AA'),
-('李白');
-
---人名按照汉语拼音A-Z升序排序
-SELECT * FROM people_name_table
-ORDER BY name COLLATE "zh_CN.utf8"; --注意是双引号,单引号报错 --如果没有可以换成这个 zh-Hans-CN-x-icu  ICU（International Components for Unicode）
-
---查看支持简体中文的排序方式
-SELECT * FROM pg_collation
-WHERE (
-collname ilike '%zh-hans%'
-or collname ilike '%cn%'
+-- 创建 departments 表
+DROP TABLE IF EXISTS departments;
+CREATE TABLE departments (
+    id SERIAL PRIMARY KEY,
+    department_name VARCHAR(50)
 );
+
+-- 插入示例数据
+INSERT INTO employees (name, department_id) VALUES
+('Alice', 1),
+('Bob', 2),
+('Charlie', NULL);
+
+INSERT INTO departments (id, department_name) VALUES
+(1, 'HR'),
+(2, 'Finance');
+
+
+-- 使用 INNER JOIN
+SELECT employees.name, departments.department_name
+FROM employees
+INNER JOIN departments ON employees.department_id = departments.id;
+
+-- 使用默认 LEFT JOIN
+SELECT employees.name, departments.department_name
+FROM employees
+LEFT JOIN departments ON employees.department_id = departments.id;
+
+-- 使用默认 JOIN（不指定类型）
+SELECT employees.name, departments.department_name
+FROM employees
+JOIN departments ON employees.department_id = departments.id;
+
 ```
 
-## 去重后排序
-
-```sql
-SELECT a,b FROM table1 ORDER BY c ASC; --这么写可以
-SELECT DISTINCT a,b FROM table1 ORDER BY c ASC; --这么写报错
-SELECT DISTINCT a,b,c FROM table1 ORDER BY c ASC; --如果去重,必须把排序字段SELECT出来
-```
 
 # bool
 
@@ -256,6 +201,7 @@ SELECT 'a'=1 AS E;
 <details>
 <summary>E答案</summary>
 E 使用=比较时尝试将'a'转为int，该语句实际为SELECT 'a'::int=1 AS E,报错  
+因此,如果WHERE或LEFT JOIN使用码值,一定要把数字也加上单引号,避免这样的报错
 </details>
 
 ```sql
@@ -272,14 +218,11 @@ SELECT ' 1 '=1 AS G;
 <details>
 <summary>G答案</summary>
 G 尝试将' 1 '转换为int,自动去掉了前后的空格
-</details>
 
 ```sql
-SELECT null AS H WHERE null ;
+SELECT ''=0 AS G0;  
 ```
-<details>
-<summary>H答案</summary>
-H WHERE条件为false或null时不会返回
+Postgres报错(`''::int=0`也报错),GaussDB(DWS)会把空串或任意长度空格转为0
 </details>
 
 ```
@@ -296,29 +239,13 @@ SELECT 'tr'::boolean AS J;
 <details>
 <summary>J答案</summary>
 J t、tr、tru、true、y、ye、yes无论大小写都能转换为true,也可以去前后的空格
+
 ```sql
 SELECT ' yE '::boolean AS J; 
 ```
 false同理 
 </details>
 
-```sql
-SELECT (0=1 AND (1/0)=1) AS K;
-```
-<details>
-<summary>K答案</summary>
-K 返回false,因为第一个`0=1`结果为false导致WHERE短路,不会执行后面的`(1/0)=1`,如果写成`SELECT ((1/0)=1 AND 0=1) AS K2;`就报错了.
-
-同理
-```sql
-SELECT (1=1 OR (1/0)=1) AS K3;
-```
-结果为true.
-
-因此写WHERE条件时,建议把重要的条件放前面,能减少判断次数.
-
-[SQL常见100面试题解析-第12条](https://mp.weixin.qq.com/s/dKe8BEJU8O1XnTO61wrydw)
-</details>
 
 ## 存储
 
@@ -335,7 +262,7 @@ test_true,
 test_false
 )
 select 
-1::boolean as test_true,
+1::boolean as test_true,  --换成'yes','no'也会转为'true','false'
 0::boolean as test_false
 ;
 
@@ -421,19 +348,165 @@ SELECT (true AND true) OR (false AND false);  --先AND再OR?
 
 # WHERE
 
+## 返回结果
+
 WHERE条件整体返回的是一个布尔值，
 作用与每条该值仅在该条为true时返回，
 false或null时不会返回
 
+```sql
+SELECT null AS H WHERE null ;
+```
+<details>
+<summary>H答案</summary>
+H WHERE条件为false或null时不会返回
+</details>
+
+
+## 1=1
+
 不用管网上说的`WHERE 1=1`增加耗时，放心写，**相信优化器**，不信你可以在后面加100个` and 1=1`试试
 
 ```sql
+--加上100个试试
 SELECT 'SELECT ''测试耗时'' WHERE 1 '||string_agg('AND 1=1', ' ') AS result
 FROM generate_series(1, 100);
 ```
 
 如果你连=都懒得写就直接写`WHERE 1`
 (GaussDB(DWS),原生Postgres并不支持)
+
+## 短路
+
+```sql
+SELECT (0=1 AND (1/0)=1) AS K;
+```
+<details>
+<summary>K答案</summary>
+K 返回false,因为第一个`0=1`结果为false导致WHERE短路,执行到`false AND`就退出了,不会执行后面的`(1/0)=1`,如果写成`SELECT ((1/0)=1 AND 0=1) AS K2;`就报错了.
+
+同理
+
+```sql
+SELECT (1=1 OR (1/0)=1) AS K3;
+
+SELECT 'test_short_circuit' 
+WHERE (1=1 OR (1/0)=1);
+```
+结果为true.
+
+</details>
+
+写WHERE条件时,建议把重要的条件放前面,能减少判断次数.
+
+[SQL常见100面试题解析-第12条](https://mp.weixin.qq.com/s/dKe8BEJU8O1XnTO61wrydw)
+
+
+# SELECT
+
+## DISTINCT
+
+```sql
+--取客户最新日期的余额(每个客户只取一条)
+SELECT DISTINCT ON (cust_id) 
+    cust_id, 
+    dt, 
+    bal
+FROM 
+    table1
+ORDER BY 
+    cust_id, dt DESC;
+
+--等价于
+SELECT cust_id, dt, bal
+FROM (
+    SELECT 
+        cust_id, 
+        dt, 
+        bal, 
+        ROW_NUMBER() OVER (
+          PARTITION BY cust_id 
+          ORDER BY dt DESC) AS rn
+    FROM 
+        table1
+) AS t
+WHERE rn = 1;
+```
+
+# ORDER BY
+
+## 规则
+
+默认的排序方式为按照ASCII增序排列。
+''(空串)小于任何一个字符串,null大于任何一个字符串
+
+因此，在对数据进行降序排列时，可以加上`NULLS LAST`,把null放在最后
+
+## 指定内容排序
+
+```sql
+DROP TABLE IF EXISTS ccy_table;
+CREATE TABLE ccy_table
+(
+  ccy varchar(3)
+);
+INSERT INTO ccy_table (ccy)
+VALUES 
+('CNY'),  -- 人民币
+('USD'),  -- 美元
+('EUR'),  -- 欧元
+('JPY'),  -- 日元
+('GBP'),  -- 英镑
+('AUD'),  -- 澳大利亚元
+('CAD'),  -- 加拿大元
+('HKD')   -- 港币
+;
+
+--币种表人民币排最前,美元第二,其余按照字母排序
+SELECT *
+FROM ccy_table
+ORDER BY
+  CASE 
+    WHEN ccy = 'CNY' THEN 1
+    WHEN ccy = 'USD' THEN 2
+    ELSE 3
+  END,
+  ccy ASC
+;
+```
+
+```sql
+DROP TABLE IF EXISTS people_name_table;
+CREATE TABLE people_name_table (
+    name varchar(50)
+);
+
+INSERT INTO people_name_table (name) VALUES 
+('张三'), 
+('李四'), 
+('王五'),
+('艾AA'),
+('李白');
+
+--人名按照汉语拼音A-Z升序排序
+SELECT * FROM people_name_table
+ORDER BY name COLLATE "zh_CN.utf8"; --注意是双引号,单引号报错 --如果没有可以换成这个 zh-Hans-CN-x-icu  ICU（International Components for Unicode）
+
+--查看支持简体中文的排序方式
+SELECT * FROM pg_collation
+WHERE (
+collname ilike '%zh-hans%'
+or collname ilike '%cn%'
+);
+```
+
+## 去重后排序
+
+```sql
+SELECT a,b FROM table1 ORDER BY c ASC; --这么写可以
+SELECT DISTINCT a,b FROM table1 ORDER BY c ASC; --这么写报错
+SELECT DISTINCT a,b,c FROM table1 ORDER BY c ASC; --如果去重,必须把排序字段SELECT出来
+```
 
 # ANALYSE
 
@@ -446,7 +519,7 @@ ANALYSE table1;  --表
 ANALYSE table1(column1);  --列
 ```
 
-# Compression
+# 分布及压缩
 
 [行列存压缩-GaussDB(DWS)](https://support.huaweicloud.com/tg-dws/dws_16_0164.html)
 
@@ -463,6 +536,7 @@ ANALYSE table1(column1);  --列
 [ALTER TABLE_数据仓库服务 GaussDB(DWS)](https://support.huaweicloud.com/sqlreference-dws/dws_06_0142.html)
 
 不重建表直接修改压缩级别
+
 ```sql
 ALTER TABLE compressed_table
 SET(
@@ -624,6 +698,3 @@ CREATE VIEW pg_tables AS
 
 [ChatGPT](https://chatgpt.com/)
 
-
-
-本博客的所有内容除特别声明外，均采用 [CC BY 4.0 许可协议](https://creativecommons.org/licenses/by/4.0/)。转载请注明[出处](https://dreamingcats.github.io/2024/07/17/Postgresql%E4%B8%AD%E4%B8%80%E4%BA%9B%E4%BD%A0%E5%8F%AF%E8%83%BD%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84%E7%94%A8%E6%B3%95/)。
