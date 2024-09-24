@@ -35,7 +35,7 @@ SELECT 用中文字段名怎么你了,🥰,【，；：“”】 FROM 用中文�
 这是人为规定的,你也可以改成100、128等  
 预留1Byte用于字符串的结尾字符 \0  
 
-```C++
+```cpp
 /*
  * Maximum length for identifiers (e.g. table names, column names,
  * function names).  Names actually are limited to one fewer byte than this,
@@ -142,10 +142,15 @@ SELECT employees.name, departments.department_name
 FROM employees
 INNER JOIN departments ON employees.department_id = departments.id;
 
--- 使用默认 LEFT JOIN
+-- 使用 LEFT JOIN
 SELECT employees.name, departments.department_name
 FROM employees
 LEFT JOIN departments ON employees.department_id = departments.id;
+
+-- 使用 RIGHT JOIN
+SELECT employees.name, departments.department_name
+FROM employees
+RIGHT JOIN departments ON employees.department_id = departments.id;
 
 -- 使用默认 JOIN（不指定类型）
 SELECT employees.name, departments.department_name
@@ -184,10 +189,13 @@ SELECT (1.1)::boolean AS C;
 <details>
 <summary>C答案</summary>
 C 报错，转boolean只支持整数
+```sql
+SELECT (1.0)::boolean AS C;  --1.0也报错,因为是通过numeric强转的
+```
 </details>
 
 ```sql
-SELECT 0.1+0.2=0.3 AS D
+SELECT 0.1+0.2=0.3 AS D;
 ```
 <details>
 <summary>D答案</summary>
@@ -362,6 +370,13 @@ SELECT null AS H WHERE null ;
 H WHERE条件为false或null时不会返回
 </details>
 
+```sql
+SELECT null/0 AS I;
+```
+<details>
+<summary>I答案</summary>
+I 不报错,返回null
+</details>
 
 ## 1=1
 
@@ -369,7 +384,7 @@ H WHERE条件为false或null时不会返回
 
 ```sql
 --加上100个试试
-SELECT 'SELECT ''测试耗时'' WHERE 1 '||string_agg('AND 1=1', ' ') AS result
+SELECT 'SELECT ''测试耗时'' WHERE 1=1 '||string_agg('AND 1=1', ' ') AS result
 FROM generate_series(1, 100);
 ```
 
@@ -566,7 +581,10 @@ SELECT column1 FROM table1 ORDER BY random() LIMIT 1;
 
 ```sql
 UPDATE table1 SET bal=random()*1000000;  --用于生成随机金额
+
 UPDATE table1 SET cust_id='0'||LPAD((random()*1e9)::int::varchar,9,'0');  --用于生成随机客户号,以0开头,后9位随机如果长度不足用0补全左侧
+
+UPDATE table1 SET flow_id=UPPER(MD5(random()));  --用于生成流程号,大小写不敏感时使用
 ```
 
 ## 随机生成YYYYMMDD日期
