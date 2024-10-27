@@ -13,10 +13,12 @@ tags:
 
 # 送E5子账号
 
-薅了个巨硬E5的羊毛，免费送15个E5的子账号，后缀是@earthol.onmicrosoft.com，要的带上你想要的英文用户名和邮箱私聊我
-已刷API，之前续订过一次，应该不会翻车
+早已翻车
 
-包含：全套正版Office+5T的OneDrive
+~~薅了个巨硬E5的羊毛，免费送15个E5的子账号，后缀是@earthol.onmicrosoft.com，要的带上你想要的英文用户名和邮箱私聊我~~
+~~已刷API，之前续订过一次，应该不会翻车~~
+
+~~包含：全套正版Office+5T的OneDrive~~
 
 # 分享盘
 

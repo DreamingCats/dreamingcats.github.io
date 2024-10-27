@@ -254,6 +254,14 @@ SELECT ' yE '::boolean AS J;
 false同理 
 </details>
 
+```
+SELECT null/0 AS K;  
+```
+<details>
+<summary>I答案</summary>
+K 返回null,实际未执行除法
+</details>
+
 
 ## 存储
 
