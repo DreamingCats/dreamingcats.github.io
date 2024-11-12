@@ -13,6 +13,8 @@ tags:
     - GaussDB
 ---
 
+本文最后更新于2024-11-12
+
 # 名称
 
 表名、字段名支持unicode。可以，但不建议。
@@ -690,6 +692,18 @@ FROM T1
 ## 系统表信息函数
 
 [GaussDB(DWS)系统表信息函数](https://support.huaweicloud.com/sqlreference-dws/dws_06_0341.html)
+
+## 快速获取表字段名
+
+```sql
+SELECT cloumn_name,*
+FROM information_schema.columns
+WHERE 1=1
+  AND table_schema='your_schema'
+  AND table_name='your_table_name'
+```
+
+查出来默认就是建表顺序
 
 ## sudo
 pg_tables其实是视图,使用root权限(postgres)可以DROP.  

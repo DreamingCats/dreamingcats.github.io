@@ -232,6 +232,7 @@ Android Debug Bridge
 
 <a href="https://dreamingcats.github.io/2021/11/05/%E5%B8%B8%E7%94%A8adb%E6%8C%87%E4%BB%A4/" target="_blank">常用adb指令</a>
 
+![](https://github.com/DreamingCats/dreamingcats.github.io/raw/main/img/Android/adb_path.png)
 
 ## 手机性能测试
 
