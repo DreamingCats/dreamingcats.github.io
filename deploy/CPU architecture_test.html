@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Windows 安装包架构识别测试页</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131a2e;
+      --panel-2: #1a2340;
+      --text: #e9eefc;
+      --muted: #9fb0d8;
+      --ok: #2ecc71;
+      --warn: #f39c12;
+      --bad: #ff6b6b;
+      --line: #2a355f;
+      --accent: #7aa2ff;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      background: linear-gradient(180deg, #0b1020 0%, #0e1530 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 32px auto 56px;
+    }
+    .hero {
+      background: linear-gradient(135deg, rgba(122,162,255,0.16), rgba(122,162,255,0.04));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.15;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .card {
+      background: rgba(19, 26, 46, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .span-3 { grid-column: span 3; }
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .value {
+      font-size: 24px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+    .value.small { font-size: 18px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .ok { background: rgba(46, 204, 113, 0.12); color: #8ef0b3; border-color: rgba(46, 204, 113, 0.35); }
+    .warn { background: rgba(243, 156, 18, 0.12); color: #ffd08a; border-color: rgba(243, 156, 18, 0.35); }
+    .bad { background: rgba(255, 107, 107, 0.12); color: #ffb1b1; border-color: rgba(255, 107, 107, 0.35); }
+
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    button, .btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #26345f, #1d294e);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    button:hover, .btn:hover {
+      transform: translateY(-1px);
+      border-color: #4d68b8;
+      background: linear-gradient(180deg, #30416f, #24325d);
+    }
+    .btn.secondary {
+      background: #182241;
+    }
+    .btn.manual {
+      background: #162842;
+    }
+    .recommend {
+      border: 1px solid rgba(122, 162, 255, 0.4);
+      background: linear-gradient(135deg, rgba(122,162,255,0.15), rgba(122,162,255,0.04));
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      width: 220px;
+    }
+    .config-grid {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      background: #0f1730;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+    code {
+      background: #10182f;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    .footnote {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    details {
+      background: rgba(19, 26, 46, 0.65);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #0f1730;
+      border: 1px solid var(--line);
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 12px;
+      color: #d7e4ff;
+      overflow: auto;
+    }
+    @media (max-width: 900px) {
+      .span-3, .span-4, .span-5, .span-6, .span-7, .span-8 { grid-column: span 12; }
+      .two-col { grid-template-columns: 1fr; }
+      th { width: 120px; }
+      .config-grid { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Windows 安装包架构识别测试页</h1>
+      <p class="subtitle">
+        本页会优先使用 <code>navigator.userAgentData</code> / UA Client Hints 识别 OS 与 CPU 架构；若浏览器不支持，则降级到传统 UA 推断。
+        你可以先本地打开测试，再把下方下载地址替换成你自己的正式安装包地址。
+      </p>
+      <div class="btns">
+        <button id="detectBtn">重新检测</button>
+        <button id="copyJsonBtn" class="secondary">复制检测结果 JSON</button>
+        <button id="downloadReportBtn" class="secondary">下载检测结果.txt</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card span-3">
+        <div class="label">识别到的 OS</div>
+        <div class="value" id="osValue">-</div>
+      </div>
+      <div class="card span-3">
+        <div class="label">识别到的架构</div>
+        <div class="value" id="archValue">-</div>
+      </div>
+      <div class="card span-3">
+        <div class="label">识别可信度</div>
+        <div class="value small" id="confidenceValue">-</div>
+      </div>
+      <div class="card span-3">
+        <div class="label">识别方式</div>
+        <div id="methodBadge" class="pill warn">-</div>
+      </div>
+
+      <div class="card span-7 recommend">
+        <div class="label">推荐安装包</div>
+        <div class="value small" id="recommendedName">-</div>
+        <div class="mono" id="recommendedUrl" style="margin-top:8px;">-</div>
+        <div class="btns">
+          <a id="downloadRecommendedBtn" class="btn" href="#">打开推荐下载地址</a>
+          <button id="copyRecommendedBtn" class="secondary">复制推荐地址</button>
+        </div>
+        <div class="footnote" id="recommendNote"></div>
+      </div>
+
+      <div class="card span-5">
+        <div class="label">手动选择</div>
+        <div class="btns">
+          <a class="btn manual" id="manualX64" href="#">Windows x64</a>
+          <a class="btn manual" id="manualX86" href="#">Windows x86</a>
+          <a class="btn manual" id="manualArm64" href="#">Windows ARM64</a>
+        </div>
+        <div class="footnote">
+          生产环境建议始终保留手动切换入口，因为并不是所有浏览器都能稳定返回精确架构。
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <div class="label">你的安装包地址配置（可现场修改测试）</div>
+        <div class="config-grid">
+          <div>Windows x64</div>
+          <input id="urlX64" value="https://example.com/download/myapp-win-x64.exe" />
+
+          <div>Windows x86</div>
+          <input id="urlX86" value="https://example.com/download/myapp-win-x86.exe" />
+
+          <div>Windows ARM64</div>
+          <input id="urlArm64" value="https://example.com/download/myapp-win-arm64.exe" />
+        </div>
+        <div class="btns">
+          <button id="applyUrlBtn">应用上面的下载地址</button>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <div class="label">原始浏览器信号</div>
+        <table>
+          <tbody id="signalTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card span-6">
+        <div class="label">识别说明</div>
+        <div class="two-col">
+          <div>
+            <div class="pill ok">较准确</div>
+            <p class="muted">Chromium 系浏览器支持 UA Client Hints 时，通常可较准确区分 <code>x86 / x64 / arm64</code>。</p>
+          </div>
+          <div>
+            <div class="pill warn">需降级</div>
+            <p class="muted">Firefox / Safari 或某些隐私策略下，可能只能拿到 OS，架构只能启发式推断甚至无法判断。</p>
+          </div>
+        </div>
+        <div class="footnote">
+          你最终上线时，建议策略是：<b>自动识别 + 默认推荐 + 始终保留手动选择</b>。
+        </div>
+      </div>
+
+      <div class="card span-12">
+        <details>
+          <summary>展开查看当前检测结果 JSON</summary>
+          <pre id="jsonOutput">{}</pre>
+        </details>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      urls: {
+        x64: 'https://example.com/download/myapp-win-x64.exe',
+        x86: 'https://example.com/download/myapp-win-x86.exe',
+        arm64: 'https://example.com/download/myapp-win-arm64.exe'
+      },
+      result: null
+    };
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    async function detectWindowsDownloadTarget() {
+      let os = 'unknown';
+      let arch = 'unknown';
+      let confidence = '低';
+      let method = 'UA fallback';
+      let reason = '浏览器未提供高精度架构信息';
+      let highEntropy = null;
+
+      const basic = {
+        userAgent: navigator.userAgent || '',
+        platform: navigator.platform || '',
+        language: navigator.language || '',
+        vendor: navigator.vendor || '',
+        userAgentDataSupported: !!navigator.userAgentData,
+        uaDataPlatform: navigator.userAgentData?.platform || null,
+        uaDataMobile: navigator.userAgentData?.mobile ?? null,
+        uaBrands: navigator.userAgentData?.brands || null
+      };
+
+      if (navigator.userAgentData) {
+        os = navigator.userAgentData.platform || 'unknown';
+        method = 'UA-CH';
+        try {
+          highEntropy = await navigator.userAgentData.getHighEntropyValues([
+            'architecture', 'bitness', 'platformVersion', 'wow64', 'fullVersionList'
+          ]);
+
+          const a = (highEntropy.architecture || '').toLowerCase();
+          const b = String(highEntropy.bitness || '');
+
+          if (os === 'Windows') {
+            if (a.includes('arm')) {
+              arch = b === '64' ? 'arm64' : 'arm';
+              confidence = '高';
+              reason = 'UA Client Hints 直接返回 ARM 架构';
+            } else if (a === 'x86') {
+              arch = b === '64' ? 'x64' : 'x86';
+              confidence = '高';
+              reason = 'UA Client Hints 返回 x86 架构与位数';
+            } else if (a) {
+              arch = `${a}${b ? '/' + b : ''}`;
+              confidence = '中';
+              reason = 'UA Client Hints 返回了非标准映射值';
+            } else {
+              reason = 'UA Client Hints 可用，但未返回 architecture';
+            }
+          } else if (os !== 'unknown') {
+            confidence = '中';
+            reason = '已识别平台，但本页主要针对 Windows 下载分流';
+          }
+        } catch (err) {
+          reason = '浏览器拒绝或未返回高熵字段，转为传统 UA 推断';
+        }
+      }
+
+      if (os === 'unknown') {
+        const ua = basic.userAgent;
+        const pf = basic.platform;
+        if (/Windows/i.test(ua) || /^Win/i.test(pf)) os = 'Windows';
+        else if (/Mac OS X|Macintosh/i.test(ua)) os = 'macOS';
+        else if (/Linux/i.test(ua)) os = 'Linux';
+        else if (/Android/i.test(ua)) os = 'Android';
+        else if (/iPhone|iPad|iPod/i.test(ua)) os = 'iOS';
+      }
+
+      if (arch === 'unknown') {
+        const ua = basic.userAgent;
+        if (/ARM64|AArch64/i.test(ua)) {
+          arch = 'arm64';
+          confidence = confidence === '高' ? '高' : '中';
+          reason = '传统 UA 中出现 ARM64/AArch64 特征';
+        } else if (/WOW64|Win64|x64|amd64|x86_64/i.test(ua)) {
+          arch = 'x64';
+          confidence = confidence === '高' ? '高' : '中';
+          reason = '传统 UA 中出现 x64/Win64 等特征';
+        } else if (/\bi[3-6]86\b|\bx86\b/i.test(ua)) {
+          arch = 'x86';
+          confidence = confidence === '高' ? '高' : '低';
+          reason = '传统 UA 中出现 x86/i386 类特征';
+        }
+      }
+
+      const recommended = pickDownloadUrl({ os, arch });
+
+      return {
+        os,
+        arch,
+        confidence,
+        method,
+        reason,
+        recommended,
+        signals: basic,
+        highEntropy,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    function pickDownloadUrl({ os, arch }) {
+      if (os !== 'Windows') {
+        return {
+          filename: '请手动选择系统版本',
+          url: '#manual',
+          kind: 'manual'
+        };
+      }
+
+      if (arch === 'arm64') {
+        return { filename: 'myapp-win-arm64.exe', url: state.urls.arm64, kind: 'arm64' };
+      }
+      if (arch === 'x64') {
+        return { filename: 'myapp-win-x64.exe', url: state.urls.x64, kind: 'x64' };
+      }
+      if (arch === 'x86') {
+        return { filename: 'myapp-win-x86.exe', url: state.urls.x86, kind: 'x86' };
+      }
+
+      return {
+        filename: 'myapp-win-x64.exe（默认推荐）',
+        url: state.urls.x64,
+        kind: 'fallback-x64'
+      };
+    }
+
+    function setText(id, text) {
+      document.getElementById(id).textContent = text;
+    }
+
+    function setBadge(el, text, cls) {
+      el.className = `pill ${cls}`;
+      el.textContent = text;
+    }
+
+    function fillSignals(result) {
+      const rows = [
+        ['navigator.userAgent', result.signals.userAgent || '-'],
+        ['navigator.platform', result.signals.platform || '-'],
+        ['navigator.userAgentData', String(result.signals.userAgentDataSupported)],
+        ['uaData.platform', result.signals.uaDataPlatform ?? '-'],
+        ['uaData.mobile', result.signals.uaDataMobile ?? '-'],
+        ['uaData.brands', result.signals.uaBrands ? JSON.stringify(result.signals.uaBrands) : '-'],
+        ['highEntropy.architecture', result.highEntropy?.architecture ?? '-'],
+        ['highEntropy.bitness', result.highEntropy?.bitness ?? '-'],
+        ['highEntropy.platformVersion', result.highEntropy?.platformVersion ?? '-'],
+        ['highEntropy.wow64', result.highEntropy?.wow64 ?? '-'],
+        ['识别原因', result.reason]
+      ];
+
+      const html = rows.map(([k, v]) => `
+        <tr>
+          <th>${escapeHtml(k)}</th>
+          <td class="mono">${escapeHtml(v)}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('signalTableBody').innerHTML = html;
+    }
+
+    function render(result) {
+      state.result = result;
+      setText('osValue', result.os);
+      setText('archValue', result.arch);
+      setText('confidenceValue', result.confidence);
+
+      const badge = document.getElementById('methodBadge');
+      if (result.method === 'UA-CH') setBadge(badge, 'UA-CH / Client Hints', 'ok');
+      else setBadge(badge, 'UA fallback', result.arch === 'unknown' ? 'bad' : 'warn');
+
+      setText('recommendedName', result.recommended.filename);
+      setText('recommendedUrl', result.recommended.url);
+
+      const recommendBtn = document.getElementById('downloadRecommendedBtn');
+      recommendBtn.href = result.recommended.url;
+      recommendBtn.target = result.recommended.url.startsWith('http') ? '_blank' : '_self';
+
+      const note = [];
+      if (result.os !== 'Windows') {
+        note.push('当前浏览器看起来不是 Windows 环境，因此未直接推荐 Windows 安装包。');
+      } else if (result.arch === 'unknown') {
+        note.push('当前浏览器未能精确识别 CPU 架构，暂时默认推荐 x64，同时请保留手动选择。');
+      } else {
+        note.push(`已根据浏览器信号推荐 ${result.arch} 安装包。`);
+      }
+      note.push(`识别原因：${result.reason}`);
+      setText('recommendNote', note.join(' '));
+
+      fillSignals(result);
+      document.getElementById('jsonOutput').textContent = JSON.stringify(result, null, 2);
+
+      document.getElementById('manualX64').href = state.urls.x64;
+      document.getElementById('manualX86').href = state.urls.x86;
+      document.getElementById('manualArm64').href = state.urls.arm64;
+    }
+
+    function applyUrlConfig() {
+      state.urls.x64 = document.getElementById('urlX64').value.trim() || '#';
+      state.urls.x86 = document.getElementById('urlX86').value.trim() || '#';
+      state.urls.arm64 = document.getElementById('urlArm64').value.trim() || '#';
+      if (state.result) {
+        state.result.recommended = pickDownloadUrl(state.result);
+        render(state.result);
+      }
+    }
+
+    async function runDetection() {
+      setText('osValue', '检测中...');
+      setText('archValue', '检测中...');
+      setText('confidenceValue', '检测中...');
+      try {
+        const result = await detectWindowsDownloadTarget();
+        render(result);
+      } catch (err) {
+        const fallback = {
+          os: 'unknown',
+          arch: 'unknown',
+          confidence: '低',
+          method: 'failed',
+          reason: err?.message || '检测失败',
+          recommended: { filename: '请手动选择', url: '#manual', kind: 'manual' },
+          signals: {
+            userAgent: navigator.userAgent || '',
+            platform: navigator.platform || ''
+          },
+          highEntropy: null,
+          timestamp: new Date().toISOString()
+        };
+        render(fallback);
+      }
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('已复制到剪贴板');
+      } catch {
+        alert('复制失败，可能是浏览器限制。');
+      }
+    }
+
+    function downloadTextFile(filename, text) {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    document.getElementById('detectBtn').addEventListener('click', runDetection);
+    document.getElementById('applyUrlBtn').addEventListener('click', applyUrlConfig);
+    document.getElementById('copyJsonBtn').addEventListener('click', () => {
+      const text = JSON.stringify(state.result || {}, null, 2);
+      copyText(text);
+    });
+    document.getElementById('copyRecommendedBtn').addEventListener('click', () => {
+      const text = state.result?.recommended?.url || '';
+      copyText(text);
+    });
+    document.getElementById('downloadReportBtn').addEventListener('click', () => {
+      const text = JSON.stringify(state.result || {}, null, 2);
+      downloadTextFile('browser-detection-result.txt', text);
+    });
+
+    ['urlX64', 'urlX86', 'urlArm64'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') applyUrlConfig();
+      });
+    });
+
+    applyUrlConfig();
+    runDetection();
+  </script>
+</body>
+</html>
