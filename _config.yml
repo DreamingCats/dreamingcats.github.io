@@ -42,7 +42,9 @@ anchorjs: true # if you want to customize anchor. check out line:181 of `post.ht
 # from PR#40, to support local preview for Jekyll 3.0
 # make sure you have this gem installed
 # `$ gem install jekyll-paginate`
-plugins: [jekyll-paginate]
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
 
 # Markdown settings
 # replace redcarpet to kramdown,
@@ -91,7 +93,7 @@ page-mathjax: false
 # Friends
 friends:
   [
-    { title: "资源分享网盘", href: "https://drive.amerika.run/" },
+    { title: "资源分享网盘(已关闭)", href: "https://drive.amerika.run/" },
     { title: "模板作者:huxpro", href: "http://huangxuan.me/" },
 	  { title: "米哈游笑话", href: "https://github.com/DreamingCats/miHoYoJokes" },
   ]
